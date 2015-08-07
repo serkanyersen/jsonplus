@@ -14,3 +14,12 @@ exports.testSimpleSelfReference = function(test) {
     test.equal(result.bar, 5, 'bar should be equal to foo');
     test.done();
 };
+
+exports.testSimpleComments = function(test) {
+    var json = fixture('simple-comments-test'),
+        result = parse(json);
+
+    test.equal(result.bar, 5, 'bar should be equal to foo');
+    test.equal(result.list[0], 5, 'list.0 should be equal to foo');
+    test.done();
+};

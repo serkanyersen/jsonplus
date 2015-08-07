@@ -1,0 +1,11 @@
+/**
+ * This is a fixture with comment
+ */
+{
+  "foo": 5, // Actual value
+  "bar": /* this is how you define reference */ "@@self.foo",
+  "list": [
+    // lists work too
+    "@@self.foo"
+  ]
+}

@@ -1,4 +1,5 @@
 'use strict';
+var strip = require('strip-json-comments');
 
 function isObject(obj) {
     return obj === Object(obj) && !Array.isArray(obj);
@@ -41,7 +42,7 @@ function selfRef(obj, self) {
 }
 
 module.exports = function jsonPlusParse(data) {
-    var obj = JSON.parse(data);
+    var obj = JSON.parse(strip(data));
     obj = selfRef(obj);
     return obj;
 };
