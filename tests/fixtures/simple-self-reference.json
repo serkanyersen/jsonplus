@@ -1,4 +1,4 @@
 {
   "foo": 5,
-  "bar": "@@self.foo"
+  "bar": "@self.foo"
 }

@@ -1,0 +1,12 @@
+{
+  "first": "john",
+  "last": "doe",
+  "list": [{
+    "word": "hello"
+  }, {
+    "word": "world"
+  }],
+  "full": "{{ @self.first }} {{ @self.last }}",
+  "short": "{{ first }} {{ last }}",
+  "detailed": "{{ list[0].word }} {{ list[1].word }}"
+}

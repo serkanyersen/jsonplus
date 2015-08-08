@@ -1,5 +1,6 @@
 'use strict';
 var strip = require('strip-json-comments');
+var tag = /^\@self[\.\[]/;
 
 function isObject(obj) {
     return obj === Object(obj) && !Array.isArray(obj);
@@ -18,10 +19,15 @@ function resolvePath(object, reference) {
     return !reference ? object : reference.split('.').reduce(dotDeref, object);
 }
 
+function parseTemplate(object, template) {
+    var html = template || '';
+    return html.replace(/\{\{\s*(.*?)\s*\}\}/gim, function(all, match) {
+        return resolvePath(object, match.replace(tag, '')) || all;
+    });
+}
 
 function selfRef(obj, self) {
     var newObj;
-    var tag = /^\@\@self[\.\[]/;
     self = self || obj;
 
     if (isObject(obj)) {
@@ -35,6 +41,8 @@ function selfRef(obj, self) {
         });
     } else if (typeof obj === 'string' && tag.test(obj)) {
         newObj = resolvePath(self, obj.replace(tag, ''));
+    } else if (typeof obj === 'string') {
+        newObj = parseTemplate(self, obj);
     } else {
         newObj = obj;
     }
