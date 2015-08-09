@@ -1,0 +1,4 @@
+{
+  "self": "@self.blah",
+  "tag": "{{ blah }}"
+}

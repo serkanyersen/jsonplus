@@ -1,0 +1,6 @@
+[{
+  "first": "john",
+  "last": "doe",
+  "full": "{{ [0].first }} {{ @self[0].last }}",
+  "self": "@self[0].first"
+}]

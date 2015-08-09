@@ -1,0 +1,18 @@
+{
+  "this": {
+    "is": [{
+      "going": {
+        "really": [[[{ "deep": "yes" }]]]
+      }
+    }]
+  },
+
+  "andthis": {
+    "will": [{
+      "find": {
+        "that": [[[{ "link": "@self.this.is[0].going.really[0][0][0].deep" }]]]
+      }
+    }]
+  }
+
+}

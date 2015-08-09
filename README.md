@@ -28,7 +28,9 @@ Example:
   "full": "{{ first }} {{ last }}"
 }
 ```
-if you JSON is a first level array you can use paths like this `{{ [0].first }}` or if you think it's more readible `{{ @self[0].first }}` still works
+if your JSON is a first level array you can use paths like this `{{ [0].first }}` or if you think it's more readible `{{ @self[0].first }}` still works
+
+**Note:** Due to the nature of template tags, everything passes through them will be convered to string. Whereas `@self` notation can replace itself with whatever it was referencing.
 
 ## A complex example
 ```javascript

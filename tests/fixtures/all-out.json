@@ -1,0 +1,18 @@
+/**
+ * This is a full example of the JSONPlus
+ */
+[{
+  "this": /* is */ "simple", // very
+  "/api/v1": "myapi", // urls can be keys
+  "list": [{ "first": "john" }, { "last": "doe" }], // objects in arrays
+
+  // Self ref here
+  "read1": "@self[0].this",
+  "read2": "@self[0]['/api/v1']",
+  "read3": "@self[0].list[0]", // I placed the whole object here
+
+  // Template Tags
+  "read4": "{{ [0].this }}",
+  "read5": "{{ [0]['/api/v1'] }}",
+  "read6": "{{ [0].list[0] }}" // I placed the whole object here, which will become string
+}]

@@ -1,0 +1,18 @@
+{
+  "name": "john",
+  "/api/v1/": "api",
+  "yes 'thats' hard": "meh",
+  "/api": {
+    "/v1": {
+      "/name": "john"
+    }
+  },
+
+  // Tags
+  "nospaces": "{{name}}",
+  "spaces": "{{      name     }}",
+  "spacesontheside": "{{       name}}",
+  "nonkey": "{{ ['/api/v1/'] }}",
+  "hard": "{{ [\"yes 'thats' hard\"] }}",
+  "fullkeys": "{{ ['/api']['/v1']['/name'] }}"
+}

@@ -1,0 +1,6 @@
+[{
+  "first": "john",
+  "last": "doe"
+}, {
+  "fullName": "Mr. {{ [0].first }} {{ [0].last }}"
+}]
