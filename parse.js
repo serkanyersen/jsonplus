@@ -53,7 +53,7 @@ function parseTemplate(object, template) {
  * @param  {Object} self Full object
  * @return {Object}      evaluated JSON Object part
  */
-function selfRef(obj, self) {
+function resolve(obj, self) {
     var newObj;
     self = self || obj;
 
@@ -61,14 +61,14 @@ function selfRef(obj, self) {
     if (isObject(obj)) {
         newObj = {};
         Object.keys(obj).forEach(function(key) {
-            newObj[key] = selfRef(obj[key], self);
+            newObj[key] = resolve(obj[key], self);
         });
     }
 
     // if array go through each item and call self
     else if (Array.isArray(obj)) {
         newObj = obj.map(function(val) {
-            return selfRef(val, self);
+            return resolve(val, self);
         });
     }
 
@@ -99,6 +99,8 @@ function selfRef(obj, self) {
  */
 exports.parse = function jsonPlusParse(data) {
     var obj = JSON.parse(strip(data));
-    obj = selfRef(obj);
+    obj = resolve(obj);
     return obj;
 };
+
+exports.resolve = resolve;

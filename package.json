@@ -23,6 +23,9 @@
     "this",
     "smart"
   ],
+  "typescript": {
+    "definition": "jasonparse.d.ts"
+  },
   "author": "Serkan Yersen <serkanyersen@gmail.com> (http://serkan.io/)",
   "license": "MIT",
   "devDependencies": {
