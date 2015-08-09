@@ -1,5 +1,5 @@
 'use strict';
-var parse = require('../parse'),
+var parse = require('../parse').parse,
     fs = require('fs');
 
 function fixture(name) {

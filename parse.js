@@ -97,7 +97,7 @@ function selfRef(obj, self) {
  * @param  {string} data JSON string
  * @return {Object}      parsed JSON Object
  */
-module.exports = function jsonPlusParse(data) {
+exports.parse = function jsonPlusParse(data) {
     var obj = JSON.parse(strip(data));
     obj = selfRef(obj);
     return obj;
