@@ -1,5 +1,6 @@
 # JSONPlus
 a JSON parser that supports comments and self references
+[![Build Status](https://travis-ci.org/serkanyersen/jsonplus.svg?branch=master)](https://travis-ci.org/serkanyersen/jsonplus)
 
 ## Usage
 It's really simple
