@@ -35,9 +35,24 @@ Example:
   "full": "{{ first }} {{ last }}"
 }
 ```
-If your JSON is a first level array you can use paths like this `{{ [0].first }}` or if you think it's more readible, `{{ @self[0].first }}` works as well.
+If your JSON is a first level array you can use paths like this `{{ [0].first }}` or if you think it's more readable, `{{ @self[0].first }}` works as well.
 
-**Note:** Due to the nature of template tags, everything that passes through them will be convered to string, whereas `@self` notation can replace itself with whatever it is referencing.
+**Note:** Due to the nature of template tags, everything that passes through them will be converted to string, whereas `@self` notation can replace itself with whatever it is referencing.
+
+## Resolve function
+Additionally, you can use the reference resolver directly. You might be parsing your JSON files with your own system i.e. streaming and you might only want to have the reference resolver. Here is an example
+
+```javascript
+var resolve = require('jsonplus').resolve
+
+// This will resolve all reference strings on the given object
+var object = resolve(AlreadyParsedJSON);
+
+// resolve has a second argument, which provides the context for references
+var object = resolve({ full: '{{ first }} {{ last }}' }, { first: 'john', last: 'doe' });
+
+console.log(object) // { full: 'john doe' }
+```
 
 ## A complex example
 ```javascript
