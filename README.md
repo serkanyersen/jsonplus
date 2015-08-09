@@ -11,10 +11,10 @@ npm install --save-dev jsonplus
 
 It's really simple
 ```javascript
-var parse = require('jsonplus');
+var jsonplus = require('jsonplus');
 
 // Parse like you would with JSON.parse
-var response = parse('{"foo": 5, "bar": "@self.foo"}');
+var response = jsonplus.parse('{"foo": 5, "bar": "@self.foo"}');
 
 console.log(response); // { foo: 5, bar: 5 }
 ```
