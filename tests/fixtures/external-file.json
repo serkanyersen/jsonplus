@@ -1,0 +1,6 @@
+{
+  "@ext": {
+    "user": "tests/fixtures/template-tags.json"
+  },
+  "name": "@ext.user.first"
+}

@@ -48,6 +48,17 @@ exports.Templates = {
     }
 };
 
+exports.ExternalFiles = {
+    testSimpleExternalFile: function(test) {
+        var result = parse(fixture('external-file'));
+
+        test.equal(result.name, 'john');
+        test.equal(result['@ext'], undefined);
+        test.done();
+    }
+};
+
+
 exports.Complex = {
     testFirstLevelArray: function(test) {
         var result = parse(fixture('first-level-array'));

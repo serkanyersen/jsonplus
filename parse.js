@@ -1,8 +1,8 @@
 'use strict';
-// Helper to strip comments
+
 var strip = require('strip-json-comments');
-// Tag matcher
-var tag = /^\@self[\.\[]/;
+var tag = /^\@(self|ext)[\.\[]/;
+var fs = require('fs');
 
 /**
  * Check given object is Actual object or not
@@ -20,6 +20,7 @@ function isObject(obj) {
  * @return {any}              matched value or undefined when not found
  */
 function resolvePath(object, reference) {
+
     function arrDeref(o, ref) {
         var key = ref.replace(/^['"]|['"\]]+$/g, '');
         return !ref ? o : (o[key]);
@@ -92,6 +93,25 @@ function resolve(obj, self) {
     return newObj;
 }
 
+function findExternal(obj) {
+    if ('@ext' in obj) {
+        Object.keys(obj['@ext']).forEach(function(key) {
+            var file = obj['@ext'][key];
+            var extObj = JSON.parse(fs.readFileSync(file, 'utf8'));
+            obj['@ext'][key] = extObj;
+        });
+    }
+
+    return obj;
+}
+
+function cleanExternal(obj) {
+    if (obj) {
+        delete obj['@ext'];
+    }
+    return obj;
+}
+
 /**
  * Parses json string by removing comments and resolving self references
  * @param  {string} data JSON string
@@ -99,8 +119,15 @@ function resolve(obj, self) {
  */
 exports.parse = function jsonPlusParse(data) {
     var obj = JSON.parse(strip(data));
+    obj = findExternal(obj);
     obj = resolve(obj);
+    obj = cleanExternal(obj);
     return obj;
 };
 
-exports.resolve = resolve;
+exports.resolve = function(obj, self){
+    obj = findExternal(obj);
+    obj = resolve(obj, self);
+    obj = cleanExternal(obj);
+    return obj;
+};
