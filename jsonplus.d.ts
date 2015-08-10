@@ -11,5 +11,5 @@ declare module "jsonplus" {
    * Resolves self references on an already parsed object
    * self here is where references will be resolved against
    */
-  function resolve(object: {}, self?: {}): any;
+  function resolve(object: any, self?: any): any;
 }
