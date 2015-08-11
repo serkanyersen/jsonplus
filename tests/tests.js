@@ -6,7 +6,6 @@ function fixture(name) {
     return fs.readFileSync('tests/fixtures/' + name + '.json', 'utf8');
 }
 
-
 exports.Basic = {
     testSimpleSelfReference: function(test) {
         var result = parse(fixture('simple-self-reference'));
@@ -57,7 +56,6 @@ exports.ExternalFiles = {
         test.done();
     }
 };
-
 
 exports.Complex = {
     testFirstLevelArray: function(test) {
