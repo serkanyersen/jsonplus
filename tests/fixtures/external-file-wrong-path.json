@@ -1,0 +1,6 @@
+{
+  "@ext": {
+    "user": "wrong.json"
+  },
+  "name": "@ext.user.first"
+}

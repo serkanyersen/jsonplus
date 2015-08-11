@@ -6,7 +6,6 @@ function fixture(name) {
     return fs.readFileSync('tests/fixtures/' + name + '.json', 'utf8');
 }
 
-
 exports.Basic = {
     testSimpleSelfReference: function(test) {
         var result = parse(fixture('simple-self-reference'));
@@ -44,6 +43,42 @@ exports.Templates = {
         var result = parse(fixture('template-tags2'));
 
         test.equal(result[0].full, 'john doe', 'should create full name');
+        test.done();
+    }
+};
+
+exports.ExternalFiles = {
+    testSimpleExternalFile: function(test) {
+        var result = parse(fixture('external-file'));
+
+        test.equal(result.name, 'john');
+        test.equal(result['@ext'], undefined);
+        test.done();
+    },
+
+    testDeepExternalFile: function(test) {
+        var result = parse(fixture('external-file2'));
+
+        test.equal(result.name, 'john');
+        test.equal(result['@ext'], undefined);
+        test.done();
+    },
+
+    testExtWrongPath: function(test) {
+        test.expect(1);
+        try {
+            parse(fixture('external-file-wrong-path'));
+        } catch(e) {
+            test.ok(true);
+        }
+        test.done();
+    },
+
+    testExternalFileComplex: function(test) {
+        var result = parse(fixture('external-file-complex'));
+        test.equal(result.read1, 'john doe');
+        test.equal(result.read2, 'hello world');
+        test.equal(result.read3, 'yes');
         test.done();
     }
 };

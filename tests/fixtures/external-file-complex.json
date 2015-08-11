@@ -1,0 +1,11 @@
+{
+  "@ext": {
+    "ref": "tests/fixtures/template-tags.json",
+    "ref2": "tests/fixtures/deep-link.json"
+  },
+
+  // External Values
+  "read1": "{{ @ext.ref.full }}",
+  "read2": "@ext.ref.detailed",
+  "read3": "{{ @ext.ref2.andthis.will[0].find.that[0][0][0].link }}"
+}
