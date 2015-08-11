@@ -47,7 +47,7 @@ You can also make references to external files. JSONPlus will fetch those files 
   // @ext means external
   "@ext": {
     // Value of `users` will be replaced with the contents of users.json
-    users: "/path/to/users.json"
+    "users": "/path/to/users.json"
   },
   // Reach the values of external file using @ext prefix
   "name": "@ext.users[1].name"
