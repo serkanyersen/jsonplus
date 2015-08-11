@@ -39,6 +39,26 @@ If your JSON is a first level array you can use paths like this `{{ [0].first }}
 
 **Note:** Due to the nature of template tags, everything that passes through them will be converted to string, whereas `@self` notation can replace itself with whatever it is referencing.
 
+## External File References
+You can also make references to external files. JSONPlus will fetch those files and allow you to share values between json files.
+
+```javascript
+{
+  // @ext means external
+  "@ext": {
+    // Value of `users` will be replaced with the contents of users.json
+    users: "/path/to/users.json"
+  },
+  // Reach the values of external file using @ext prefix
+  "name": "@ext.users[1].name"
+}
+```
+
+**Notes on external files**:
+ - External references can only work on direct objects. json strings that starts with an array ie,`[{ "my": "json" }]` cannot reference to external files.
+ - File paths are relative to where your script is running, *not* to the JSON file.
+ - If you reference a file that references to your file back, you'll end up in infinite loop.
+
 ## Resolve function
 Additionally, you can use the reference resolver directly. You might be parsing your JSON files with your own system i.e. streaming and you might only want to have the reference resolver. Here is an example
 

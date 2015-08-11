@@ -1,0 +1,6 @@
+{
+  "@ext": {
+    "deep": "tests/fixtures/external-file.json"
+  },
+  "name": "@ext.deep.name"
+}

@@ -1,6 +1,6 @@
 {
   "name": "jsonplus",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "JSON parser with comments and self reference support",
   "main": "parse.js",
   "scripts": {
@@ -21,7 +21,9 @@
     "reference",
     "self",
     "this",
-    "smart"
+    "smart",
+    "fixtures",
+    "$ref"
   ],
   "typescript": {
     "definition": "jsonplus.d.ts"
