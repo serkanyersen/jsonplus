@@ -4,7 +4,6 @@ var strip = require('strip-json-comments');
 var tag = /^\@(self|ext)[\.\[]/;
 var selfTag = /^\@self[\.\[]/;
 var fs = require('fs');
-
 var jsonPlus = {
     /**
      * Check given object is Actual object or not
@@ -95,6 +94,12 @@ var jsonPlus = {
         return newObj;
     },
 
+    /**
+     * Finds all references external JSON objects parses them recursively
+     * and references back to given object
+     * @param  {Object} obj to check against references
+     * @return {Object}     Parsed object
+     */
     findExternal: function(obj) {
         if ('@ext' in obj) {
             Object.keys(obj['@ext']).forEach(function(key) {
@@ -103,10 +108,14 @@ var jsonPlus = {
                 obj['@ext'][key] = extObj;
             }.bind(this));
         }
-
         return obj;
     },
 
+    /**
+     * Remove the @external files object
+     * @param  {Object} obj JSON Object
+     * @return {Object}     JSON Object
+     */
     cleanExternal: function(obj) {
         if (obj) {
             delete obj['@ext'];
@@ -127,6 +136,12 @@ var jsonPlus = {
         return obj;
     },
 
+    /**
+     * Resolves already parsed json object
+     * @param  {Object} obj  Already parsed object
+     * @param  {Object} self [Optional] Object to use as reference
+     * @return {Object}      Resolved object
+     */
     jsonPlusResolve: function(obj, self){
         obj = this.findExternal(obj);
         obj = this.resolve(obj, self);
