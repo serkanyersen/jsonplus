@@ -1,0 +1,24 @@
+{
+    "@ext": {
+        "bigUser": "tests/fixtures/template-tags.json"
+    },
+
+    "user1": {
+        "name": "john",
+        "last": "doe"
+    },
+
+    "user2": {
+        "name": "jane",
+        "last": "doe"
+    },
+
+    "users": [
+        "@self.user1",
+        "@self.user2",
+        "@ext.bigUser"
+    ],
+
+    "myUsers": "@self.users[1].name",
+    "extUser": "@self.users[2].first"
+}

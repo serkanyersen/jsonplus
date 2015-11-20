@@ -4,16 +4,9 @@ var strip = require('strip-json-comments');
 var tag = /^\@(self|ext)[\.\[]/;
 var selfTag = /^\@self[\.\[]/;
 var fs = require('fs');
-var jsonPlus = {
-    /**
-     * Check given object is Actual object or not
-     * @param  {any}  obj obj to check against
-     * @return {Boolean}     true if object is object
-     */
-    isObject: function(obj) {
-        return obj === Object(obj) && !Array.isArray(obj);
-    },
+var _ = require('lodash');
 
+var jsonPlus = {
     /**
      * Resolves JS array notation in string to actual value
      * @param  {Object} object    Actual Object
@@ -21,17 +14,7 @@ var jsonPlus = {
      * @return {any}              matched value or undefined when not found
      */
     resolvePath: function(object, reference) {
-
-        function arrDeref(o, ref) {
-            var key = ref.replace(/^['"]|['"\]]+$/g, '');
-            return !ref ? o : (o[key]);
-        }
-
-        function dotDeref(o, ref) {
-            return ref.split('[').reduce(arrDeref, o);
-        }
-
-        return !reference ? object : reference.split('.').reduce(dotDeref, object);
+        return _.propertyOf(object)(reference);
     },
 
     /**
@@ -53,45 +36,35 @@ var jsonPlus = {
      * all self references
      * @param  {Object} obj  JSON Object part
      * @param  {Object} self Full object
-     * @return {Object}      evaluated JSON Object part
      */
-    resolve: function(obj, self) {
-        var newObj;
+    resolve: function(obj, self, path) {
         self = self || obj;
+        path = path || [];
 
         // If object go through each value and call self again
-        if (this.isObject(obj)) {
-            newObj = {};
+        if (_.isPlainObject(obj)) {
             Object.keys(obj).forEach(function(key) {
-                newObj[key] = this.resolve(obj[key], self);
+                this.resolve(obj[key], self, path.concat([key]));
             }.bind(this));
         }
 
         // if array go through each item and call self
         else if (Array.isArray(obj)) {
-            newObj = obj.map(function(val) {
-                return this.resolve(val, self);
+            obj.forEach(function(value, index) {
+                this.resolve(obj[index], self, path.concat([index]));
             }.bind(this));
         }
 
         // if string and starts with the reference tag
         // evaluate and return new value
         else if (typeof obj === 'string' && tag.test(obj)) {
-            newObj = this.resolvePath(self, obj.replace(selfTag, ''));
+            _.set(self, path, this.resolvePath(self, obj.replace(selfTag, '')));
         }
 
         // if string check for template tags
         else if (typeof obj === 'string') {
-            newObj = this.parseTemplate(self, obj);
+            _.set(self, path, this.parseTemplate(self, obj));
         }
-
-        // anything else
-        else {
-            newObj = obj;
-        }
-
-        // yes
-        return newObj;
     },
 
     /**
@@ -131,7 +104,7 @@ var jsonPlus = {
     jsonPlusParse: function(data) {
         var obj = JSON.parse(strip(data));
         obj = this.findExternal(obj);
-        obj = this.resolve(obj);
+        this.resolve(obj);
         obj = this.cleanExternal(obj);
         return obj;
     },
@@ -144,7 +117,7 @@ var jsonPlus = {
      */
     jsonPlusResolve: function(obj, self){
         obj = this.findExternal(obj);
-        obj = this.resolve(obj, self);
+        this.resolve(obj, self);
         obj = this.cleanExternal(obj);
         return obj;
     }

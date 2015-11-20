@@ -128,6 +128,13 @@ exports.Complex = {
         test.done();
     },
 
+    testRefORef: function(test) {
+        var result = parse(fixture('reference-to-reference'));
+        test.equal(result.myUsers, 'jane');
+        test.equal(result.extUser, 'john');
+        test.done();
+    },
+
     testFullExample: function(test) {
         var result = parse(fixture('all-out'));
         test.equal(result[0].read1, 'simple');

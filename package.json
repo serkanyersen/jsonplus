@@ -1,6 +1,6 @@
 {
   "name": "jsonplus",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "JSON parser with comments and self reference support",
   "main": "parse.js",
   "scripts": {
@@ -34,6 +34,7 @@
     "nodeunit": "^0.9.1"
   },
   "dependencies": {
+    "lodash": "^3.10.1",
     "strip-json-comments": "^1.0.4"
   }
 }
