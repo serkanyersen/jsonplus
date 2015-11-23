@@ -2,6 +2,7 @@
 a JSON parser that supports comments and self references
 
 [![Build Status](https://travis-ci.org/serkanyersen/jsonplus.svg?branch=master)](https://travis-ci.org/serkanyersen/jsonplus) [![npm](https://img.shields.io/npm/v/jsonplus.svg)](https://www.npmjs.com/package/jsonplus) [![License](https://img.shields.io/npm/l/jsonplus.svg)](https://github.com/serkanyersen/jsonplus#mit-license)
+[![TypeScript definitions on DefinitelyTyped](http://definitelytyped.org/badges/standard-flat.svg)](https://github.com/serkanyersen/jsonplus/blob/master/jsonplus.d.ts)
 
 ## Usage
 Install using npm
