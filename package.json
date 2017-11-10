@@ -4,7 +4,8 @@
   "description": "JSON parser with comments and self reference support",
   "main": "parse.js",
   "scripts": {
-    "test": "node_modules/.bin/nodeunit tests/tests.js"
+    "test": "nodeunit tests/tests.js",
+    "lint": "eslint"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,12 @@
   "author": "Serkan Yersen <serkanyersen@gmail.com> (http://serkan.io/)",
   "license": "MIT",
   "devDependencies": {
+    "eslint": "^4.10.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
     "nodeunit": "^0.9.1"
   },
   "dependencies": {
