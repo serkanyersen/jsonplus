@@ -3,6 +3,7 @@ a JSON parser that supports comments and self references
 
 [![Build Status](https://travis-ci.org/serkanyersen/jsonplus.svg?branch=master)](https://travis-ci.org/serkanyersen/jsonplus) [![npm](https://img.shields.io/npm/v/jsonplus.svg)](https://www.npmjs.com/package/jsonplus) [![License](https://img.shields.io/npm/l/jsonplus.svg)](https://github.com/serkanyersen/jsonplus#mit-license)
 [![TypeScript definitions on DefinitelyTyped](http://definitelytyped.org/badges/standard-flat.svg)](https://github.com/serkanyersen/jsonplus/blob/master/jsonplus.d.ts)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fserkanyersen%2Fjsonplus.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fserkanyersen%2Fjsonplus?ref=badge_shield)
 
 ## Usage
 Install using npm
@@ -130,3 +131,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 ```
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fserkanyersen%2Fjsonplus.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fserkanyersen%2Fjsonplus?ref=badge_large)
