@@ -3,9 +3,17 @@
  */
 export interface ParseOptions {
   /**
-   * Base path for resolving external file references
+   * Base path for resolving external file references.
+   * If not provided, defaults to the current working directory.
+   * Relative paths in external file references are resolved relative to this base path.
    */
   basePath?: string;
+
+  /**
+   * Maximum depth for recursive reference resolution.
+   * Defaults to 100 to prevent stack overflow from infinite recursion.
+   */
+  maxDepth?: number;
 
   /**
    * Internal use: Tracks external references to prevent circular dependencies

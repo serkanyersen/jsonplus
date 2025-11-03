@@ -1,9 +1,0 @@
-{
-    "extends": "standard",
-    "rules": {
-        "prefer-const": "error",
-        "no-var": "error",
-        "semi": ["error", "always"],
-        "comma-dangle": ["error", "always-multiline"]
-    }
-}

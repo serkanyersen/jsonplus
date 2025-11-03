@@ -1,21 +1,35 @@
 {
-  "name": "jsonplus",
+  "name": "@serkan/jsonplus",
   "version": "2.0.0",
+  "description": "JSON parser with comments, self-references, external file imports, and template strings",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/serkanyersen/jsonplus.git"
+  },
   "exports": {
     ".": "./mod.ts"
   },
+  "publish": {
+    "include": ["mod.ts", "lib/**", "types.ts", "README.md", "LICENSE"]
+  },
   "tasks": {
-    "test": "deno test --allow-read=./v1/tests/fixtures/"
+    "test": "deno test --allow-read=./tests/fixtures/ tests/",
+    "fmt": "deno fmt",
+    "lint": "deno lint"
   },
   "fmt": {
-    "files": {
-      "include": ["**/*.ts"]
-    },
-    "options": {
-      "lineWidth": 100,
-      "indentWidth": 2,
-      "singleQuote": true
-    }
+    "include": ["**/*.ts"],
+    "exclude": ["node_modules", ".deno", "v1"],
+    "useTabs": false,
+    "lineWidth": 100,
+    "indentWidth": 2,
+    "singleQuote": true,
+    "proseWrap": "preserve"
+  },
+  "lint": {
+    "include": ["**/*.ts"],
+    "exclude": ["node_modules", ".deno", "v1"]
   },
   "compilerOptions": {
     "strict": true,
