@@ -16,7 +16,7 @@ export interface ParseOptions {
 /**
  * Any valid JSON value
  */
-export type JsonValue = 
+export type JsonValue =
   | string
   | number
   | boolean
