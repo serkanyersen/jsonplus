@@ -14,7 +14,7 @@
     "include": ["mod.ts", "lib/**", "types.ts", "README.md", "LICENSE"]
   },
   "tasks": {
-    "test": "deno test --allow-read=./tests/fixtures/ tests/",
+    "test": "deno test --allow-read=./tests/fixtures/ --allow-env tests/",
     "fmt": "deno fmt",
     "lint": "deno lint"
   },

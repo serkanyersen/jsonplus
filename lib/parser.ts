@@ -12,7 +12,8 @@ import {
 const PATTERNS = {
   SELF_TAG: /^@self[.[]/,
   EXTERNAL_TAG: /^@ext[.[]/,
-  ANY_TAG: /^@(self|ext)[.[]/,
+  ENV_TAG: /^@env\./,
+  ANY_TAG: /^@(self|ext|env)/,
   TEMPLATE: /\{\{\s*(.*?)\s*\}\}/gim,
 } as const;
 
@@ -31,6 +32,23 @@ class JsonPlusImpl implements JsonPlus {
   constructor() {
     this.#loadedFiles = new Set();
   }
+
+  /**
+   * Resolves an environment variable reference
+   * @param varName The environment variable name
+   * @returns The environment variable value
+   * @throws {Error} If the environment variable is not found
+   */
+  #resolveEnvVar(varName: string): string {
+    const value = Deno.env.get(varName);
+    if (value === undefined) {
+      throw new Error(
+        `Environment variable "${varName}" is not defined`,
+      );
+    }
+    return value;
+  }
+
   /**
    * Resolves a property path in a JSON object using dot notation
    * @example resolvePath(obj, "users.0.name") => obj.users[0].name
@@ -112,40 +130,15 @@ class JsonPlusImpl implements JsonPlus {
 
       // Process the value
       if (PATTERNS.ANY_TAG.test(value)) {
-        // Handle direct references (@self and @ext)
-        const isExternal = PATTERNS.EXTERNAL_TAG.test(value);
-        let reference: string;
-        if (isExternal) {
-          // For @ext, remove @ext prefix while preserving bracket
-          if (value.startsWith('@ext[')) {
-            reference = value.substring(4); // Remove "@ext" to get "[0]..."
-          } else if (value.startsWith('@ext.')) {
-            reference = value.substring(5); // Remove "@ext." to get "users..."
-          } else {
-            reference = value.replace(PATTERNS.EXTERNAL_TAG, '');
-          }
-          reference = `ext.${reference}`;
-        } else {
-          // For @self, remove @self prefix while preserving bracket
-          if (value.startsWith('@self[')) {
-            reference = value.substring(5); // Remove "@self" to get "[0]..."
-          } else if (value.startsWith('@self.')) {
-            reference = value.substring(6); // Remove "@self." to get "foo..."
-          } else {
-            reference = value.replace(PATTERNS.SELF_TAG, '');
-          }
-        }
-        const resolved = this.resolvePath(
-          self,
-          reference,
-        );
-
-        if (resolved !== undefined) {
-          parent[lastKey] = resolved;
+        // Handle environment variable references (@env.VAR_NAME)
+        if (PATTERNS.ENV_TAG.test(value)) {
+          const varName = value.substring(5); // Remove "@env." prefix
+          const envValue = this.#resolveEnvVar(varName);
+          parent[lastKey] = envValue;
           // If the resolved value is a string, it might contain more references
           if (
-            typeof resolved === 'string' &&
-            (PATTERNS.ANY_TAG.test(resolved) || resolved.includes('{{'))
+            typeof envValue === 'string' &&
+            (PATTERNS.ANY_TAG.test(envValue) || envValue.includes('{{'))
           ) {
             this.#resolveInternal(
               parent[lastKey],
@@ -155,6 +148,51 @@ class JsonPlusImpl implements JsonPlus {
               maxDepth,
             );
           }
+        } else {
+          // Handle direct references (@self and @ext)
+          const isExternal = PATTERNS.EXTERNAL_TAG.test(value);
+          let reference: string;
+          if (isExternal) {
+            // For @ext, remove @ext prefix while preserving bracket
+            if (value.startsWith('@ext[')) {
+              reference = value.substring(4); // Remove "@ext" to get "[0]..."
+            } else if (value.startsWith('@ext.')) {
+              reference = value.substring(5); // Remove "@ext." to get "users..."
+            } else {
+              reference = value.replace(PATTERNS.EXTERNAL_TAG, '');
+            }
+            reference = `ext.${reference}`;
+          } else {
+            // For @self, remove @self prefix while preserving bracket
+            if (value.startsWith('@self[')) {
+              reference = value.substring(5); // Remove "@self" to get "[0]..."
+            } else if (value.startsWith('@self.')) {
+              reference = value.substring(6); // Remove "@self." to get "foo..."
+            } else {
+              reference = value.replace(PATTERNS.SELF_TAG, '');
+            }
+          }
+          const resolved = this.resolvePath(
+            self,
+            reference,
+          );
+
+          if (resolved !== undefined) {
+            parent[lastKey] = resolved;
+            // If the resolved value is a string, it might contain more references
+            if (
+              typeof resolved === 'string' &&
+              (PATTERNS.ANY_TAG.test(resolved) || resolved.includes('{{'))
+            ) {
+              this.#resolveInternal(
+                parent[lastKey],
+                self,
+                [...path],
+                nextDepth,
+                maxDepth,
+              );
+            }
+          }
         }
       } else if (value.includes('{{')) {
         // Handle template strings
@@ -162,6 +200,11 @@ class JsonPlusImpl implements JsonPlus {
           const trimmedMatch = match.trim();
           const refMatch = trimmedMatch.match(PATTERNS.ANY_TAG);
           if (refMatch) {
+            // Handle environment variable references in templates (@env.VAR_NAME)
+            if (PATTERNS.ENV_TAG.test(trimmedMatch)) {
+              const varName = trimmedMatch.substring(5); // Remove "@env." prefix
+              return this.#resolveEnvVar(varName);
+            }
             // Handle references inside templates (@self or @ext)
             const isExternal = PATTERNS.EXTERNAL_TAG.test(trimmedMatch);
             // Remove @self or @ext prefix, preserving the path
@@ -192,7 +235,7 @@ class JsonPlusImpl implements JsonPlus {
             const resolved = this.resolvePath(self, reference);
             return resolved?.toString() || all;
           } else {
-            // Handle regular template expressions (no @self/@ext prefix)
+            // Handle regular template expressions (no @self/@ext/@env prefix)
             // Could be [0].first, name, etc.
             const resolved = this.resolvePath(self, trimmedMatch);
             return resolved?.toString() || all;

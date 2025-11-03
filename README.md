@@ -11,6 +11,7 @@ A JSON parser that supports comments, self-references, external file imports, an
 - ✅ **Self-References** - Reference values within the same JSON using `@self` notation
 - ✅ **Template Strings** - Use `{{expression}}` syntax for string interpolation
 - ✅ **External File References** - Import and reference values from other JSON files
+- ✅ **Environment Variables** - Reference environment variables using `@env.VAR_NAME`
 - ✅ **Bracket Notation** - Support for complex keys and array indices
 - ✅ **Security** - Path traversal protection, absolute path validation, and recursion depth limits
 - ✅ **TypeScript** - Full type definitions included
@@ -27,19 +28,19 @@ deno add npm:@serkan/jsonplus
 Or use directly:
 
 ```typescript
-import { parse } from "jsr:@serkan/jsonplus@^2.0.0";
+import { parse } from 'jsr:@serkan/jsonplus@^2.0.0';
 ```
 
 ### Deno
 
 ```typescript
-import { parse } from "https://deno.land/x/jsonplus@v2.0.0/mod.ts";
+import { parse } from 'https://deno.land/x/jsonplus@v2.0.0/mod.ts';
 ```
 
 ## Quick Start
 
 ```typescript
-import { parse } from "jsr:@serkan/jsonplus@^2.0.0";
+import { parse } from 'jsr:@serkan/jsonplus@^2.0.0';
 
 // Basic usage with self-reference
 const result = parse('{"foo": 5, "bar": "@self.foo"}');
@@ -53,7 +54,7 @@ console.log(result); // { foo: 5, bar: 5 }
 Values starting with `@self` are parsed as references to other parts of the JSON:
 
 ```typescript
-import { parse } from "jsr:@serkan/jsonplus@^2.0.0";
+import { parse } from 'jsr:@serkan/jsonplus@^2.0.0';
 
 const json = `{
   "users": [
@@ -118,6 +119,41 @@ const result = parse(json);
 // result.result = "endpoint"
 ```
 
+### Environment Variables
+
+Reference environment variables using `@env.VAR_NAME`:
+
+```typescript
+// Set environment variables
+Deno.env.set('API_KEY', 'secret-key-123');
+Deno.env.set('API_URL', 'https://api.example.com');
+
+const json = `{
+  "apiKey": "@env.API_KEY",
+  "apiUrl": "@env.API_URL",
+  "endpoint": "{{ @env.API_URL }}/users"
+}`;
+
+const result = parse(json);
+// result.apiKey = "secret-key-123"
+// result.apiUrl = "https://api.example.com"
+// result.endpoint = "https://api.example.com/users"
+```
+
+**Error Handling:**
+If an environment variable is not defined, JSONPlus will throw an error with a clear message:
+
+```typescript
+const json = '{"key": "@env.MISSING_VAR"}';
+// Throws: Error: Environment variable "MISSING_VAR" is not defined
+```
+
+**Note:** When running Deno, you need to grant environment variable access:
+
+```bash
+deno run --allow-env your-script.ts
+```
+
 ### External File References
 
 Reference values from other JSON files:
@@ -139,10 +175,10 @@ Reference values from other JSON files:
 - File paths are relative to the `basePath` option (defaults to current working directory)
 
 ```typescript
-import { parse } from "jsr:@serkan/jsonplus@^2.0.0";
+import { parse } from 'jsr:@serkan/jsonplus@^2.0.0';
 
 const result = parse(jsonString, {
-  basePath: "/path/to/config/directory",
+  basePath: '/path/to/config/directory',
 });
 ```
 
@@ -163,6 +199,9 @@ const json = `{
 ### Advanced Example
 
 ```typescript
+// Set environment variables
+Deno.env.set('BASE_URL', 'https://api.example.com');
+
 const json = `{
   // API endpoints with shared data
   "/api/users": {
@@ -183,11 +222,18 @@ const json = `{
     "response": "@self['/api/users'].response.users[1]"
   },
 
-  // Template with complex reference
-  "summary": "User 1: {{ ['/api/users'].response.users[0].name }}"
+  // Use environment variable
+  "baseUrl": "@env.BASE_URL",
+
+  // Template with environment variable and complex reference
+  "summary": "User 1: {{ ['/api/users'].response.users[0].name }}",
+  "fullEndpoint": "{{ @env.BASE_URL }}/api/users"
 }`;
 
 const result = parse(json);
+// result.baseUrl = "https://api.example.com"
+// result.summary = "User 1: john doe"
+// result.fullEndpoint = "https://api.example.com/api/users"
 ```
 
 ## API Reference
@@ -235,12 +281,12 @@ Resolves self-references in an already parsed object.
 **Example:**
 
 ```typescript
-import { resolve } from "jsr:@serkan/jsonplus@^2.0.0";
+import { resolve } from 'jsr:@serkan/jsonplus@^2.0.0';
 
 const obj = {
-  first: "john",
-  last: "doe",
-  full: "{{ first }} {{ last }}",
+  first: 'john',
+  last: 'doe',
+  full: '{{ first }} {{ last }}',
 };
 
 const resolved = resolve(obj);
@@ -307,9 +353,10 @@ This Deno version maintains 100% feature parity with the original Node.js versio
 ## Use Cases
 
 - **Fixtures**: Create reusable test fixtures with references
-- **Configuration Files**: Share values across configuration files
+- **Configuration Files**: Share values across configuration files with environment-specific settings
 - **API Mocking**: Reference shared mock data in API responses
-- **Development**: Simplify JSON editing with comments and references
+- **Development**: Simplify JSON editing with comments, references, and environment variables
+- **Deployment**: Use environment variables for different deployment environments (dev, staging, prod)
 
 ## Contributing
 
