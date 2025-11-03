@@ -1,0 +1,27 @@
+{
+  "name": "jsonplus",
+  "version": "2.0.0",
+  "exports": {
+    ".": "./mod.ts"
+  },
+  "tasks": {
+    "test": "deno test --allow-read=./v1/tests/fixtures/"
+  },
+  "fmt": {
+    "files": {
+      "include": ["**/*.ts"]
+    },
+    "options": {
+      "lineWidth": 100,
+      "indentWidth": 2,
+      "singleQuote": true
+    }
+  },
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["deno.window"]
+  },
+  "imports": {
+    "std/": "https://deno.land/std@0.205.0/"
+  }
+}
